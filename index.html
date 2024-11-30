@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <title>Algea Development: Switch Tab Checker</title>
+</head>
+
+<body>
+
+    <h1>Focus/Click on page first</h1>
+    <div id="notify"></div>
+
+    <script>
+        var visited = 0;
+        var $notify = $('#notify');
+
+        $(window).on('blur focus', function(e) {
+            var prevType = $(this).data('prevType');
+
+            //  reduce double fire issues
+            if (prevType != e.type) {
+                switch (e.type) {
+                    case 'blur':
+                        $notify.append('<div class="alert alert-warning">Why are you leaving? (User left this browser tab)</div>');
+
+                        console.log('User left this browser tab.');
+                        break;
+
+                    case 'focus':
+                        var msg = '<div class="alert alert-success">Welcome, User (now change tabs, then come back.)</div>';
+                        if (visited > 0) {
+                            var addS = visited == 1 ? '' : 's';
+                            msg = '<div class="alert alert-info">Welcome back! User has been back to this Browser Tab :: ' + visited + ' time' + addS + '</div>';
+                        }
+
+                        $notify.append(msg);
+                        visited++;
+
+                        console.log('User is viewing this browser tab.');
+                        break;
+                }
+            }
+
+            $(this).data('prevType', e.type);
+        });
+    </script>
+
+</body>
+
+</html>
